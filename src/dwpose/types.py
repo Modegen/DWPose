@@ -20,10 +20,11 @@ class BodyResult(NamedTuple):
 
 HandResult = List[Keypoint]
 FaceResult = List[Keypoint]
-
+FootResult = List[Keypoint]
 
 class PoseResult(NamedTuple):
     body: BodyResult
     left_hand: Optional[HandResult]
     right_hand: Optional[HandResult]
     face: Optional[FaceResult]
+    foot: Optional[FootResult]

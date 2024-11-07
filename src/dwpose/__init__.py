@@ -43,6 +43,7 @@ def draw_poses(poses: List[PoseResult], H, W, draw_body=True, draw_hand=True, dr
         draw_body (bool, optional): Whether to draw body keypoints. Defaults to True.
         draw_hand (bool, optional): Whether to draw hand keypoints. Defaults to True.
         draw_face (bool, optional): Whether to draw face keypoints. Defaults to True.
+        draw_foot (bool, optional): Whether to draw foot keypoints. Defaults to True.
 
     Returns:
         numpy.ndarray: A 3D numpy array representing the canvas with the drawn poses.
@@ -59,6 +60,9 @@ def draw_poses(poses: List[PoseResult], H, W, draw_body=True, draw_hand=True, dr
 
         if draw_face:
             canvas = util.draw_facepose(canvas, pose.face)
+
+        if draw_foot:
+            canvas = util.draw_footpose(canvas, pose.foot)
 
     return canvas
 
@@ -111,7 +115,8 @@ def decode_json_as_poses(json_string: str, normalize_coords: bool = False) -> Tu
                 body=BodyResult(keypoints=decompress_keypoints(pose.get('pose_keypoints_2d'))),
                 left_hand=decompress_keypoints(pose.get('hand_left_keypoints_2d')),
                 right_hand=decompress_keypoints(pose.get('hand_right_keypoints_2d')),
-                face=decompress_keypoints(pose.get('face_keypoints_2d'))
+                face=decompress_keypoints(pose.get('face_keypoints_2d')),
+                foot=decompress_keypoints(pose.get('foot_keypoints_2d'))
             )
             for pose in pose_json['people']
         ],
@@ -145,6 +150,7 @@ def encode_poses_as_dict(poses: List[PoseResult], canvas_height: int, canvas_wid
                 "face_keypoints_2d": compress_keypoints(pose.face),
                 "hand_left_keypoints_2d": compress_keypoints(pose.left_hand),
                 "hand_right_keypoints_2d":compress_keypoints(pose.right_hand),
+                "foot_keypoints_2d":compress_keypoints(pose.foot),
             }
             for pose in poses
         ],
