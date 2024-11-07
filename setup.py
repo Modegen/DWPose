@@ -9,7 +9,7 @@ setup(
     install_requires=[
         'huggingface_hub==0.20.1',
         'matplotlib==3.6.2',
-        'numpy==1.24.3
+        'numpy==1.24.3',
         'onnxruntime==1.13.1',
         'onnxruntime_gpu==1.13.1',
         'opencv_python==4.7.0.68',
