@@ -78,7 +78,75 @@ def is_normalized(keypoints: List[Optional[Keypoint]]) -> bool:
         return False
     return all(point_normalized)
 
-    
+def draw_footpose(canvas: np.ndarray, keypoints: List[Keypoint]) -> np.ndarray:
+    print(keypoints)
+    """
+    Draw keypoints and connections representing foot pose on a given canvas.
+
+    Args:
+        canvas (np.ndarray): A 3D numpy array representing the canvas (image) on which to draw the foot pose.
+        keypoints (List[Keypoint]): A list of Keypoint objects representing the foot keypoints to be drawn.
+
+    Returns:
+        np.ndarray: A 3D numpy array representing the modified canvas with the drawn foot pose.
+
+    Note:
+        The function expects the x and y coordinates of the keypoints to be normalized between 0 and 1.
+    """
+    if not is_normalized(keypoints):
+        H, W = 1.0, 1.0
+    else:
+        H, W, _ = canvas.shape
+
+    # Define foot connections
+    foot_edges = [
+        # Right foot (18-21)
+        [18, 19], [19, 20], [20, 21],
+        # Left foot (21-24)
+        [21, 22], [22, 23], [23, 24]
+    ]
+
+    # Colors for right and left foot
+    right_foot_color = (0, 255, 0)  # Green for right foot
+    left_foot_color = (255, 0, 0)   # Red for left foot
+
+    # Draw connections
+    for edge in foot_edges:
+        k1_idx, k2_idx = edge[0] - 1, edge[1] - 1  # Adjust indices to 0-based
+        if k1_idx < len(keypoints) and k2_idx < len(keypoints):  # Check if indices are valid
+            k1 = keypoints[k1_idx]
+            k2 = keypoints[k2_idx]
+        else:
+            k1, k2 = None, None
+        
+        if k1 is None or k2 is None:
+            continue
+
+        x1 = int(k1.x * W)
+        y1 = int(k1.y * H)
+        x2 = int(k2.x * W)
+        y2 = int(k2.y * H)
+
+        if x1 > eps and y1 > eps and x2 > eps and y2 > eps:
+            color = right_foot_color if k1_idx < 21 else left_foot_color
+            cv2.line(canvas, (x1, y1), (x2, y2), color, thickness=2)
+
+    # Draw keypoints
+    for i in range(0, 5):  # Keypoints 18-24 (using 0-based index)
+        keypoint = keypoints[i]
+        if keypoint is None:
+            continue
+
+        x = int(keypoint.x * W)
+        y = int(keypoint.y * H)
+        
+        if x > eps and y > eps:
+            color = right_foot_color if i < 20 else left_foot_color
+            cv2.circle(canvas, (x, y), 4, color, thickness=-1)
+
+    return canvas
+
+
 def draw_bodypose(canvas: np.ndarray, keypoints: List[Keypoint]) -> np.ndarray:
     """
     Draw keypoints and limbs representing body pose on a given canvas.

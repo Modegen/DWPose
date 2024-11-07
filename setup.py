@@ -16,6 +16,6 @@ setup(
         'Pillow==10.2.0',
         'scikit_image==0.19.3',
         'scipy', #==1.11.4',
-        'torch==2.1.1+cu118',
+        'torch', #==2.1.1+cu118',
     ],
 )
