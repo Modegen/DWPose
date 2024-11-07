@@ -79,7 +79,6 @@ def is_normalized(keypoints: List[Optional[Keypoint]]) -> bool:
     return all(point_normalized)
 
 def draw_footpose(canvas: np.ndarray, keypoints: List[Keypoint]) -> np.ndarray:
-    print(keypoints)
     """
     Draw keypoints and connections representing foot pose on a given canvas.
 
