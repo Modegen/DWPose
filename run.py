@@ -14,6 +14,7 @@ imgOut,j,source = model(img,
     include_hand=True,
     include_face=True,
     include_body=True,
+    include_foot=True,
     image_and_json=True,
     detect_resolution=512)
 

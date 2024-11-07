@@ -32,7 +32,7 @@ DWPOSE_MODEL_NAME = "yzd-v/DWPose"
 bbox_detector = "yolox_l.onnx"
 pose_estimator = "dw-ll_ucoco_384.onnx"
 
-def draw_poses(poses: List[PoseResult], H, W, draw_body=True, draw_hand=True, draw_face=True):
+def draw_poses(poses: List[PoseResult], H, W, draw_body=True, draw_hand=True, draw_face=True, draw_foot=True):
     """
     Draw the detected poses on an empty canvas.
 
@@ -199,7 +199,7 @@ class DwposeDetector:
             keypoints_info = self.dw_pose_estimation(oriImg.copy())
             return Wholebody.format_result(keypoints_info)
     
-    def __call__(self, input_image, detect_resolution=512, include_body=True, include_hand=False, include_face=False, hand_and_face=None, output_type="pil", image_and_json=False, upscale_method="INTER_CUBIC", **kwargs):
+    def __call__(self, input_image, detect_resolution=512, include_body=True, include_hand=False, include_face=False, include_foot=False, hand_and_face=None, output_type="pil", image_and_json=False, upscale_method="INTER_CUBIC", **kwargs):
         if hand_and_face is not None:
             warnings.warn("hand_and_face is deprecated. Use include_hand and include_face instead.", DeprecationWarning)
             include_hand = hand_and_face
@@ -210,7 +210,7 @@ class DwposeDetector:
 
         poses = self.detect_poses(input_image)
         detected_map = input_image.copy()#remove_pad(input_image)
-        canvas = draw_poses(poses, detected_map.shape[0], detected_map.shape[1], draw_body=include_body, draw_hand=include_hand, draw_face=include_face) 
+        canvas = draw_poses(poses, detected_map.shape[0], detected_map.shape[1], draw_body=include_body, draw_foot=include_foot, draw_hand=include_hand, draw_face=include_face) 
 
         detected_map = HWC3(canvas)
         shape = detected_map.shape
