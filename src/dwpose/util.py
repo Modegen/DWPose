@@ -98,51 +98,45 @@ def draw_footpose(canvas: np.ndarray, keypoints: List[Keypoint]) -> np.ndarray:
         H, W, _ = canvas.shape
 
     # Define foot connections
-    foot_edges = [
+    edges = [
         # Right foot (18-21)
         [18, 19], [19, 20], [20, 21],
         # Left foot (21-24)
         [21, 22], [22, 23], [23, 24]
     ]
 
-    # Colors for right and left foot
-    right_foot_color = (0, 255, 0)  # Green for right foot
-    left_foot_color = (255, 0, 0)   # Red for left foot
+    if not keypoints:
+        return canvas
+    
+    if not is_normalized(keypoints):
+        H, W = 1.0, 1.0
+    else:
+        H, W, _ = canvas.shape
 
-    # Draw connections
-    for edge in foot_edges:
-        k1_idx, k2_idx = edge[0] - 1, edge[1] - 1  # Adjust indices to 0-based
-        if k1_idx < len(keypoints) and k2_idx < len(keypoints):  # Check if indices are valid
-            k1 = keypoints[k1_idx]
-            k2 = keypoints[k2_idx]
-        else:
-            k1, k2 = None, None
-        
+    edges = [[0, 1], [1, 2], [2, 0], [3, 4], [4, 5], [5, 3]]
+    
+    for ie, (e1, e2) in enumerate(edges):
+        k1 = keypoints[e1]
+        k2 = keypoints[e2]
         if k1 is None or k2 is None:
             continue
-
+        
         x1 = int(k1.x * W)
         y1 = int(k1.y * H)
         x2 = int(k2.x * W)
         y2 = int(k2.y * H)
-
         if x1 > eps and y1 > eps and x2 > eps and y2 > eps:
-            color = right_foot_color if k1_idx < 21 else left_foot_color
-            cv2.line(canvas, (x1, y1), (x2, y2), color, thickness=2)
+            cv2.line(canvas, (x1, y1), (x2, y2), matplotlib.colors.hsv_to_rgb([ie / float(len(edges)), 1.0, 1.0]) * 255, thickness=2)
 
-    # Draw keypoints
-    for i in range(0, 5):  # Keypoints 18-24 (using 0-based index)
-        keypoint = keypoints[i]
+    for keypoint in keypoints:
         if keypoint is None:
             continue
 
-        x = int(keypoint.x * W)
-        y = int(keypoint.y * H)
-        
+        x, y = keypoint.x, keypoint.y
+        x = int(x * W)
+        y = int(y * H)
         if x > eps and y > eps:
-            color = right_foot_color if i < 20 else left_foot_color
-            cv2.circle(canvas, (x, y), 4, color, thickness=-1)
-
+            cv2.circle(canvas, (x, y), 4, (0, 0, 255), thickness=-1)
     return canvas
 
 
