@@ -1,5 +1,13 @@
 from setuptools import setup
 import os
+import sys
+
+# Check if CUDA is available
+try:
+    import torch
+    cuda_available = torch.cuda.is_available()
+except ImportError:
+    cuda_available = False
 
 # Run shell command to install system dependencies
 
@@ -11,7 +19,7 @@ setup(
         'matplotlib',#==3.6.2',
         'numpy',#==1.24.3',
         'onnxruntime',#==1.13.1',
-        'onnxruntime_gpu',#==1.13.1',
+        'onnxruntime_gpu' if cuda_available,
         'opencv_python',#==4.7.0.68',
         'Pillow',#==10.2.0',
         'scikit_image',#==0.19.3',
