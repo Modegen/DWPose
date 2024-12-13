@@ -508,11 +508,11 @@ def get_model_type(Nodesname, filename) -> str:
     if filename is None:
         return None
     elif ("onnx" in filename) and ort_providers:
-        print(f"{Nodesname}: Caching ONNXRuntime session {filename}...")
+        # print(f"{Nodesname}: Caching ONNXRuntime session {filename}...")
         return "ort"
     elif ("onnx" in filename):
-        print(f"{Nodesname}: Caching OpenCV DNN module {filename} on cv2.DNN...")
+        # print(f"{Nodesname}: Caching OpenCV DNN module {filename} on cv2.DNN...")
         return "cv2"
     else:
-        print(f"{Nodesname}: Caching TorchScript module {filename} on ...")
+        # print(f"{Nodesname}: Caching TorchScript module {filename} on ...")
         return  "torchscript"
