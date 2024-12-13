@@ -186,7 +186,7 @@ class DwposeDetector:
         det_model_path = custom_hf_download(pretrained_det_model_or_path, det_filename, cache_dir=cache_dir)
         pose_model_path = custom_hf_download(pretrained_model_or_path, pose_filename, cache_dir=cache_dir)
         
-        print(f"\nDWPose: Using {det_filename} for bbox detection and {pose_filename} for pose estimation")
+        # print(f"\nDWPose: Using {det_filename} for bbox detection and {pose_filename} for pose estimation")
         if global_cached_dwpose.det is None or global_cached_dwpose.det_filename != det_filename:
             t = Wholebody(det_model_path, None, torchscript_device=torchscript_device)
             t.pose = global_cached_dwpose.pose
@@ -248,7 +248,7 @@ class AnimalposeDetector:
         det_model_path = custom_hf_download(pretrained_det_model_or_path, det_filename, cache_dir=cache_dir)
         pose_model_path = custom_hf_download(pretrained_model_or_path, pose_filename, cache_dir=cache_dir)
         
-        print(f"\nAnimalPose: Using {det_filename} for bbox detection and {pose_filename} for pose estimation")
+        # print(f"\nAnimalPose: Using {det_filename} for bbox detection and {pose_filename} for pose estimation")
         if global_cached_animalpose.det is None or global_cached_animalpose.det_filename != det_filename:
             t = AnimalPoseImage(det_model_path, None, torchscript_device=torchscript_device)
             t.pose = global_cached_animalpose.pose
