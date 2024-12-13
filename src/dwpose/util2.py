@@ -15,6 +15,25 @@ import onnxruntime as ort
 
 # Set the logging level to ERROR
 ort.set_default_logger_severity(3)  # 0: VERBOSE, 1: INFO, 2: WARNING, 3: ERROR, 4: FATAL
+import warnings
+
+# Suppress specific warnings
+warnings.filterwarnings("ignore", category=UserWarning, module='onnxruntime')
+import sys
+import os
+import onnxruntime as ort
+from contextlib import redirect_stderr
+import io
+
+# Create a dummy stream to redirect stderr
+class DummyFile(io.StringIO):
+    def write(self, *args, **kwargs):
+        pass
+
+# Suppress ONNX Runtime warnings and errors
+with redirect_stderr(DummyFile()):
+    ort.set_default_logger_severity(4)  # Set to FATAL to suppress all messages
+
 # fix SSL: CERTIFICATE_VERIFY_FAILED issue with pytorch download https://github.com/pytorch/pytorch/issues/33288
 try:
     from torch.hub import load_state_dict_from_url
