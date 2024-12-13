@@ -11,12 +11,10 @@ from huggingface_hub import hf_hub_download
 annotator_ckpts_path = os.path.join(Path(__file__).parents[0], 'ckpts')
 USE_SYMLINKS = False
 
-try:
-    USE_SYMLINKS = eval(os.environ['AUX_USE_SYMLINKS'])
-except:
-    warnings.warn("USE_SYMLINKS not set successfully. Using default value: False to download models.")
-    pass
+import onnxruntime as ort
 
+# Set the logging level to ERROR
+ort.set_default_logger_severity(3)  # 0: VERBOSE, 1: INFO, 2: WARNING, 3: ERROR, 4: FATAL
 # fix SSL: CERTIFICATE_VERIFY_FAILED issue with pytorch download https://github.com/pytorch/pytorch/issues/33288
 try:
     from torch.hub import load_state_dict_from_url
